@@ -26,6 +26,8 @@ public class RateLimiterService {
         return rateLimiter.isAllowed(rule);
     }
 
-
-
+    public void revoke(Rule rule) {
+        RateLimiter rateLimiter = RATE_LIMITER_FACTORY.get(rule.getMode());
+        rateLimiter.revoke(rule);
+    }
 }

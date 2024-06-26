@@ -1,5 +1,29 @@
 # ratelimiter-spring-boot-starter
 
+## 关于 forked 项目的说明
+
+原项目 [taptap/ratelimiter-spring-boot-starter](https://github.com/taptap/ratelimiter-spring-boot-starter) ，根据自己的需求增加了一些功能，重新打包发布：
+
+```xml
+<dependency>
+  <groupId>cc.ddrpa.repack</groupId>
+  <artifactId>taptap-ratelimiter-spring-boot-starter</artifactId>
+  <version>1.3.1</version>
+<dependency>
+```
+
+所做更改有：
+
+- 支持 Spring Boot 3.X（可能会在将来不再考虑对 Spring Boot 2.X 和 JDK 8 的支持）
+- 支持在业务失败的情况下撤销限流的计数
+    - 如果使用 RateLimiterService，可以显式调用 `RateLimiterService#revoke` 方法
+    - 如果使用 `@RateLimit` 注解，当业务代码抛出实现 `com.taptap.ratelimiter.exception.RevocableExceptionInterface` 的异常时，将会撤销计数
+- 换成了比较习惯的 Maven
+
+开发在 [ddrpa-forked-master 分支](https://github.com/ddrpa/ratelimiter-spring-boot-starter/tree/ddrpa-forked-master) 上进行，以便后期选择性 PR（如果有的话）。
+
+## 项目介绍
+
 基于 redis 的偏业务应用的分布式限流组件，目前支持`时间窗口`、`令牌桶`
 两种限流算法。使得项目拥有分布式限流能力变得很简单。限流的场景有很多，常说的限流一般指网关限流，控制好洪峰流量，以免打垮后方应用。这里突出`偏业务应用的分布式限流`
 的原因，是因为区别于网关限流，业务侧限流可以轻松根据业务性质做到细粒度的流量控制。比如如下场景，

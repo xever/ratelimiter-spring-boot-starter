@@ -4,6 +4,7 @@ import com.taptap.ratelimiter.model.LuaScript;
 import com.taptap.ratelimiter.model.Result;
 import com.taptap.ratelimiter.model.Rule;
 import org.redisson.api.RScript;
+import org.redisson.api.RScript.ReturnType;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.LongCodec;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,6 +35,13 @@ public class TimeWindowRateLimiter implements RateLimiter {
         long ttl = results.get(1);
 
         return new Result(isAllowed, ttl);
+    }
+
+    @Override
+    public void revoke(Rule rule) {
+        List<Object> keys = getKeys(rule.getKey());
+        String script = LuaScript.getTimeWindowRateLimiterCancelScript();
+        rScript.eval(RScript.Mode.READ_WRITE, script, ReturnType.BOOLEAN, keys, rule.getRate(), rule.getRateInterval());
     }
 
     static List<Object> getKeys(String key) {

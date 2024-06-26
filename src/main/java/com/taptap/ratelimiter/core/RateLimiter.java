@@ -10,4 +10,6 @@ import com.taptap.ratelimiter.model.Rule;
 public interface RateLimiter {
 
     Result isAllowed(Rule rule);
+
+    void revoke(Rule rule);
 }

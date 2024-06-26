@@ -2,6 +2,7 @@ package com.taptap.ratelimiter.core;
 
 import com.taptap.ratelimiter.annotation.RateLimit;
 import com.taptap.ratelimiter.exception.RateLimitException;
+import com.taptap.ratelimiter.exception.RevocableExceptionInterface;
 import com.taptap.ratelimiter.model.Result;
 import com.taptap.ratelimiter.model.Rule;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Created by kl on 2017/12/29.
+ * <p>
  * Content : 切面拦截处理器
  */
 @Aspect
@@ -46,8 +48,13 @@ public class RateLimitAspectHandler {
             long extra = result.getExtra();
             throw new RateLimitException("Too Many Requests", extra, rule.getMode());
         }
-        return joinPoint.proceed();
+        try {
+            return joinPoint.proceed();
+        } catch (Throwable e) {
+            if (e instanceof RevocableExceptionInterface) {
+                rateLimiterService.revoke(rule);
+            }
+            throw e;
+        }
     }
-
-
 }
