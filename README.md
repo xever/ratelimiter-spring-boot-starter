@@ -4,13 +4,6 @@
 
 原项目 [taptap/ratelimiter-spring-boot-starter](https://github.com/taptap/ratelimiter-spring-boot-starter) ，根据自己的需求增加了一些功能，重新打包发布：
 
-```xml
-<dependency>
-  <groupId>cc.ddrpa.repack</groupId>
-  <artifactId>taptap-ratelimiter-spring-boot-starter</artifactId>
-  <version>1.3.2</version>
-<dependency>
-```
 
 所做更改有：
 
@@ -20,9 +13,18 @@
     - 如果使用 `@RateLimit` 注解，当业务代码抛出实现 `com.taptap.ratelimiter.exception.RevocableExceptionInterface` 的异常时，将会撤销计数
 - 换成了比较习惯的 Maven
 
-- 2025-01，引入依赖`redisson-spring-boot-starter` 需要注意spring boot 2.x,3.x区别，移除`spring.ratelimiter.redis*`相关配置，仅仅保留`spring.ratelimiter.enabled`,使用默认通用的spring redis配置项，相关配置见[redission官方文档](https://redisson.org/docs/integration-with-spring/)
+- 2025-01，引入依赖`redisson-spring-boot-starter` 需要注意spring boot 2.x,3.x区别，移除`spring.ratelimiter.redis*`相关配置，仅仅保留`spring.ratelimiter.enabled`,使用默认通用的spring redis配置项，相关配置见[redisson官方文档](https://redisson.org/docs/integration-with-spring/)
 
-开发在 [ddrpa-forked-master 分支](https://github.com/ddrpa/ratelimiter-spring-boot-starter/tree/ddrpa-forked-master) 上进行，以便后期选择性 PR（如果有的话）。
+### 配置说明
+- spring redis配置项，相关配置见[redisson官方文档](https://redisson.org/docs/integration-with-spring/)
+- 当前版本限于支持spring boot 2.x
+- 如果需要使用spring boot 3.x 可排除依赖 `redisson-spring-data-22` ,转而依赖 
+  `redisson-spring-data-30`，详细可见redisson官方文档
+```properties
+#启用限流
+spring.ratelimiter.enabled=true
+```
+
 
 ## 项目介绍
 
